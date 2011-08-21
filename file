@@ -4,9 +4,10 @@
 ADMIN='gert:passwd'
 DB='www'
 REV=`curl -sIX HEAD http://$ADMIN@localhost:5984/$DB/_design/${1%%/*}`
+MIME=`file -ib $1`
 
 if [[ $REV =~ Etag:\ \"(.*)\" ]]; then
- curl -X PUT http://$ADMIN@localhost:5984/$DB/_design/$1?rev=${BASH_REMATCH[1]} -H 'Content-Type: image/png' --data-binary @$1
+ curl -X PUT http://$ADMIN@localhost:5984/$DB/_design/$1?rev=${BASH_REMATCH[1]} -H "Content-Type: ${MIME%%;*}" --data-binary @$1
 else
  curl -X PUT http://$ADMIN@localhost:5984/$DB/_design/${1%%/*} -d'{}'
 fi
