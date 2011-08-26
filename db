@@ -1,7 +1,0 @@
-#!/bin/bash
-# Copyright(c) gert.cuykens@gmail.com
-
-ADMIN='gert:passwd'
-curl -X DELETE http://$ADMIN@localhost:5984/$1
-curl -X PUT http://$ADMIN@localhost:5984/$1
-
