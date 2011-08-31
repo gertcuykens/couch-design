@@ -2,18 +2,18 @@
 # Copyright(c) gert.cuykens@gmail.com
 
 ADMIN='gert:passwd'
-DOMAIN='org.couchdb.user'
 SALT=`openssl rand 16 | openssl md5`
 SHA1=`echo -n $2$SALT | openssl sha1`
-REV=`curl -sIX HEAD http://$ADMIN@localhost:5984/_users/$DOMAIN%3A$1`
-#echo ${REV%%$'\n'*}
+HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/_users/user%3A$1`
+#echo ${HEAD%%$'\n'*}
 
-if [[ $REV =~ Etag:\ \"(.*)\" ]]; then
- curl -X DELETE http://$ADMIN@localhost:5984/_users/$DOMAIN%3A$1?rev=${BASH_REMATCH[1]}
+if [[ $HEAD =~ Etag:\ \"(.*)\" ]]; then
+ REV='"_rev":"'${BASH_REMATCH[1]}'",'
 fi
 
-curl -X PUT http://$ADMIN@localhost:5984/_users/$DOMAIN%3A$1 -H 'Content-Type: application/json' -d'{
-  "_id"          : "'$DOMAIN:$1'",
+curl -X PUT http://$ADMIN@localhost:5984/_users/user%3A$1 -H 'Content-Type: application/json' -d'{
+  "_id"          : "user:'$1'",
+  '$REV'
   "type"         : "user",
   "name"         : "'$1'",
   "roles"        : [],
@@ -24,7 +24,7 @@ curl -X PUT http://$ADMIN@localhost:5984/_users/$DOMAIN%3A$1 -H 'Content-Type: a
 <<TODO
 curl -X GET http://$ADMIN@localhost:5984/_session
 curl -X DELETE http://$ADMIN@localhost:5984/_session
-curl -X PUT http://$ADMIN@localhost:5984/$1/_security -H 'Content-Type: application/json' -d'{
+curl -X PUT http://$ADMIN@localhost:5984/db/_security -H 'Content-Type: application/json' -d'{
   "admins" : {
      "names" : [],
      "roles" : []
