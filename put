@@ -2,11 +2,16 @@
 # Copyright(c) gert.cuykens@gmail.com
 
 ADMIN='gert:passwd'
-REV=`curl -sIX HEAD http://$ADMIN@localhost:5984/$1`
+HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/$1`
 MIME=`file -ib $1`
 MIME='application/json'
-if [[ $REV =~ Etag:\ \"(.*)\" ]]; then
- curl -X PUT http://$ADMIN@localhost:5984/$1?rev=${BASH_REMATCH[1]} -H "Content-Type: ${MIME%%;*}" --data-binary @$1
+if [[ $HEAD =~ Etag:\ \"(.*)\" ]]; then
+ curl -X PUT http://$ADMIN@localhost:5984/$1 \
+ -H 'If-Match: '${BASH_REMATCH[1]} \
+ -H 'Content-Type: '${MIME%%;*} \
+ --data-binary @$1
  else
- curl -X PUT http://$ADMIN@localhost:5984/$1 -H "Content-Type: ${MIME%%;*}" --data-binary @$1
+ curl -X PUT http://$ADMIN@localhost:5984/$1 \
+ -H 'Content-Type: '${MIME%%;*} \
+ --data-binary @$1
 fi
