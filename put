@@ -14,7 +14,7 @@ case $TYPE in
  ico) MIME='image/x-icon';;
  ogg) MIME='audio/ogg';;
  webm)MIME='video/webm';;
- *)   DOC=$1;;
+ *)   DOC=${1%.*};;
 esac
 
 HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/$DOC`
@@ -22,7 +22,11 @@ if [[ $HEAD =~ ETag:\ \"(.*)\" ]]; then
  REV=${BASH_REMATCH[1]}
 fi
 
-curl -X PUT http://$ADMIN@localhost:5984/$1 \
+if [ $MIME != 'application/json' ]; then
+ DOC=$1
+fi
+
+curl -X PUT http://$ADMIN@localhost:5984/$DOC \
  -H 'If-Match: '$REV \
  -H 'Content-Type: '${MIME%%;*} \
  --data-binary @$1
