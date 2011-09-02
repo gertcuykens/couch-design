@@ -3,15 +3,25 @@
 
 ADMIN='gert:passwd'
 HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/$1`
-MIME=`file -ib $1`
-MIME='application/json'
-if [[ $HEAD =~ Etag:\ \"(.*)\" ]]; then
- curl -X PUT http://$ADMIN@localhost:5984/$1 \
- -H 'If-Match: '${BASH_REMATCH[1]} \
- -H 'Content-Type: '${MIME%%;*} \
- --data-binary @$1
- else
- curl -X PUT http://$ADMIN@localhost:5984/$1 \
- -H 'Content-Type: '${MIME%%;*} \
- --data-binary @$1
+TYPE=${1#*.}
+case $TYPE in
+ htm) MIME='text/html';;
+ css) MIME='text/css';;
+ js)  MIME='text/javascript';;
+ png) MIME='image/png';;
+ ico) MIME='image/x-icon';;
+ ogg) MIME='audio/ogg';;
+ webm)MIME='video/webm';;
+ *)   MIME='application/json';;
+esac
+#MIME=`file -ib $1`
+
+if [[ $HEAD =~ ETag:\ \"(.*)\" ]]; then
+ REV=${BASH_REMATCH[1]}
 fi
+
+curl -X PUT http://$ADMIN@localhost:5984/$1 \
+ -H 'If-Match: '$REV \
+ -H 'Content-Type: '${MIME%%;*} \
+ --data-binary @$1
+

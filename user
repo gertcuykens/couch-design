@@ -4,17 +4,17 @@
 ADMIN='gert:passwd'
 SALT=`openssl rand 16 | openssl md5`
 SHA1=`echo -n $2$SALT | openssl sha1`
-HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/_users/user%3A$1`
-#echo ${HEAD%%$'\n'*}
+HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/_users/org.couchdb.user%3A$1`
 
-if [[ $HEAD =~ Etag:\ \"(.*)\" ]]; then
+if [[ $HEAD =~ ETag:\ \"(.*)\" ]]; then
  REV=${BASH_REMATCH[1]}
 fi
 
-curl -X PUT http://$ADMIN@localhost:5984/_users/user%3A$1 \
--H 'If-Match: '$REV \
+curl -X PUT http://$ADMIN@localhost:5984/_users/org.couchdb.user%3A$1 \
 -H 'Content-Type: application/json' \
 -d '{
+ "_id"          : "org.couchdb.user:'$1'",
+ "_rev"         : "'$REV'",
  "type"         : "user",
  "name"         : "'$1'",
  "roles"        : [],
@@ -35,4 +35,5 @@ curl -X PUT http://$ADMIN@localhost:5984/db/_security -H 'Content-Type: applicat
      "roles" : []
    }
 }'
+echo ${HEAD%%$'\n'*}
 TODO
