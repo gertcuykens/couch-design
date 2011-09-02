@@ -2,8 +2,10 @@
 # Copyright(c) gert.cuykens@gmail.com
 
 ADMIN='gert:passwd'
-HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/$1`
 TYPE=${1#*.}
+DOC=${1%/*}
+MIME='application/json'
+#MIME=`file -ib $1`
 case $TYPE in
  htm) MIME='text/html';;
  css) MIME='text/css';;
@@ -12,10 +14,10 @@ case $TYPE in
  ico) MIME='image/x-icon';;
  ogg) MIME='audio/ogg';;
  webm)MIME='video/webm';;
- *)   MIME='application/json';;
+ *)   DOC=$1;;
 esac
-#MIME=`file -ib $1`
 
+HEAD=`curl -sIX HEAD http://$ADMIN@localhost:5984/$DOC`
 if [[ $HEAD =~ ETag:\ \"(.*)\" ]]; then
  REV=${BASH_REMATCH[1]}
 fi
