@@ -1,0 +1,7 @@
+#!/bin/bash
+# Copyright(c) gert.cuykens@gmail.com
+./put _users
+./put _users/_security
+./user gert passwd \"admin\"
+./user test passwd
+
