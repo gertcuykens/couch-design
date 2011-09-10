@@ -4,4 +4,12 @@
 ./put _users/_security
 ./user gert passwd \"admin\"
 ./user test passwd
+./put gert
+./put test
+./put www
+./put www/lib/http.js
+./put www/user/user.htm
+./put www/user/user.css
+./put www/user/user.js
+./put www/user/user.png
 

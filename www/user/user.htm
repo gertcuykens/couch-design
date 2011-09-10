@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- Copyright(c) gert.cuykens@gmail.com -->
+<html>
+ <head>
+  <title>user</title>
+  <link   type="text/css" href="user.css" rel="stylesheet"/>
+  <script src="../lib/http.js"></script>
+  <script src="user.js"></script>
+ </head>
+ <body>
+  <div id="register">
+   name:    <input id="name"/><br/>
+   adress:  <input id="adress"/><br/>
+   city:    <input id="city"/><br/>
+   country: <input id="country"/><br/>
+   phone:   <input id="phone"/><br/>
+   email:   <input id="email"/><br/>
+   <input id="update"  type="button" value="update" onclick="user.PUT('')"/><br/>
+   <img id="box" src="user.png"/>
+  </div>
+  <div id="status"/>
+  <script>
+   dropbox(document.getElementById('box'),'')
+   user.GET('')
+  </script>
+ </body>
+</html>
