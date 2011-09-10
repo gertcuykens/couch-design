@@ -7,6 +7,7 @@
 ./put gert
 ./put test
 ./put www
+./put www/_security
 ./put www/lib/http.js
 ./put www/user/user.htm
 ./put www/user/user.css
