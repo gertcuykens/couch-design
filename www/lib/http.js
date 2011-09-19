@@ -1,76 +1,60 @@
 // Copyright(c) gert.cuykens@gmail.com
 xhr=new XMLHttpRequest()
-
-http={
- 'send':function(v){
-  xhr.open(v,http.url,true)
-  xhr.setRequestHeader('Content-Type','application/json')
-  if(http.ETag)xhr.setRequestHeader('If-Match',http.ETag)
-  xhr.addEventListener('readystatechange',function(){
-   switch(xhr.readyState){
-    case 1:xhrBox('processing...');break;
-    case 4:
-     xhrBox('')
-     http.ETag=xhr.getResponseHeader('ETag')
-     http.text=xhr.responseText
-     http.textEvent()
-    break
-   }
-  },false)
-  xhr.send(http.json)
+xhr.addEventListener('loadstart',function(e){throbber(0)},false)
+xhr.addEventListener('progress',function(e){if(e.lengthComputable)throbber(Math.round((e.loaded*100)/e.total))},false)
+xhr.addEventListener('abort',function(e){},false)
+xhr.addEventListener('error',function(e){},false)
+xhr.addEventListener('load',function(e){throbber(100)},false)
+xhr.addEventListener('readystatechange',function(){
+ switch(xhr.readyState){
+  case 1:statBox('processing...');break
+  case 4:
+   statBox('')
+   xhr.ETag=xhr.getResponseHeader('ETag')
+   xhr.text=xhr.responseText
+   xhr.textEvent()
+  break
  }
+},false)
+
+throbber=function(v){xhr.statBox.innerHTML=v}
+
+preview=function(f){
+ if (!f.type.match(/image.*/))return false
+ xhr.dropBox.classList.add('preview')
+ xhr.dropBox.file=f
+ var reader=new FileReader()
+ //reader.addEventListener('load',(function(i){return function(e){i.src=e.target.result}})(img),false)
+ reader.onload=(function(i){return function(e){i.src=e.target.result}})(xhr.dropBox)
+ reader.readAsDataURL(f)
 }
 
-upload={
- 'throbber':function(v){document.getElementById('status').innerHTML=v},
- 'preview':function(f){
-  if (!f.type.match(/image.*/))return false
-  upload.box.classList.add('preview')
-  upload.box.file=f
-  var reader=new FileReader()
-  //reader.addEventListener('load',(function(i){return function(e){i.src=e.target.result}})(img),false)
-  reader.onload=(function(i){return function(e){i.src=e.target.result}})(upload.box)
-  reader.readAsDataURL(f)
- },
- 'PUT':function(f){
-  xhr.upload.addEventListener('loadstart',function(e){upload.throbber(0);upload.preview(f)},false)
-  xhr.upload.addEventListener('progress',function(e){if(e.lengthComputable)upload.throbber(Math.round((e.loaded*100)/e.total))},false)
-  xhr.upload.addEventListener('abort',function(e){},false)
-  xhr.upload.addEventListener('error',function(e){},false)
-  xhr.upload.addEventListener('load',function(e){upload.throbber(100)},false)
-  xhr.open('PUT',upload.url,true)
-  //xhr.overrideMimeType('text/plain; charset=x-user-defined-binary')
-  xhr.setRequestHeader('Content-Type','image/png')
-  if(http.ETag)xhr.setRequestHeader('If-Match',http.ETag)
-  //if(upload.ETag)xhr.setRequestHeader('If-Match',upload.ETag)
-  xhr.send(f)
- }
-}
-
-dropBox=function(b){
+dropBox=function(x){
  var dragenter=function(e){e.stopPropagation();e.preventDefault()}
  var dragover=function(e){e.stopPropagation();e.preventDefault()}
  var drop=function(e){
+  xhr.textEvent=function(v){}
   e.stopPropagation()
   e.preventDefault()
   var f = e.dataTransfer.files
-  for (var i=0;i<f.length;i++)upload.PUT(f[i])
+  for (var i=0;i<f.length;i++){
+   preview(f[i])
+   x.send(f[i])
+  }
  }
- upload.box=b
- upload.box.addEventListener('dragenter',dragenter,false)
- upload.box.addEventListener('dragover',dragover,false)
- upload.box.addEventListener('drop',drop,false)
+ xhr.dropBox.addEventListener('dragenter',dragenter,false)
+ xhr.dropBox.addEventListener('dragover',dragover,false)
+ xhr.dropBox.addEventListener('drop',drop,false)
 }
 
-xhrBox=function(v){
+statBox=function(v){
  var text=document.createTextNode(v)
- var b=document.getElementById('status')
- if(b){b.innerHTML='';b.appendChild(text);return 0}
- b=document.createElement('div')
- b.className='status'
- b.id='status'
- b.appendChild(text)
- b.addEventListener('click',function(e){xhr.abort();b.innerHTML='canceled'},true)
- document.body.appendChild(b)
+ if(xhr.statBox){xhr.statBox.innerHTML='';xhr.statBox.appendChild(text);return 0}
+ xhr.statBox=document.createElement('div')
+ xhr.statBox.className='statBox'
+ xhr.statBox.id='statBox'
+ xhr.statBox.appendChild(text)
+ xhr.statBox.addEventListener('click',function(e){xhr.abort();xhr.statBox.innerHTML='canceled'},true)
+ document.body.appendChild(xhr.statBox)
 }
 
