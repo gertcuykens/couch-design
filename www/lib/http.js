@@ -2,22 +2,21 @@
 xhr=new XMLHttpRequest()
 xhr.addEventListener('loadstart',function(e){throbber(0)},false)
 xhr.addEventListener('progress',function(e){if(e.lengthComputable)throbber(Math.round((e.loaded*100)/e.total))},false)
-xhr.addEventListener('abort',function(e){},false)
-xhr.addEventListener('error',function(e){},false)
-xhr.addEventListener('load',function(e){throbber(100)},false)
-xhr.addEventListener('readystatechange',function(){
- switch(xhr.readyState){
-  case 1:statBox('processing...');break
-  case 4:
-   statBox('')
-   xhr.ETag=xhr.getResponseHeader('ETag')
-   xhr.text=xhr.responseText
-   xhr.textEvent()
-  break
- }
+xhr.addEventListener('abort',function(e){throbber('')},false)
+xhr.addEventListener('error',function(e){throbber('error')},false)
+xhr.addEventListener('load',function(e){
+ xhr.ETag=xhr.getResponseHeader('ETag')
+ xhr.text=xhr.responseText
+ xhr.textEvent()
+ throbber(100)
 },false)
 
-throbber=function(v){xhr.statBox.innerHTML=v}
+/*xhr.addEventListener('readystatechange',function(){
+ switch(xhr.readyState){
+  case 1:throbber('processing...');break
+  case 4:throbber('')break
+ }
+},false)*/
 
 preview=function(f){
  if (!f.type.match(/image.*/))return false
@@ -47,14 +46,14 @@ dropBox=function(x){
  xhr.dropBox.addEventListener('drop',drop,false)
 }
 
-statBox=function(v){
+throbber=function(v){
  var text=document.createTextNode(v)
  if(xhr.statBox){xhr.statBox.innerHTML='';xhr.statBox.appendChild(text);return 0}
  xhr.statBox=document.createElement('div')
  xhr.statBox.className='statBox'
  xhr.statBox.id='statBox'
  xhr.statBox.appendChild(text)
- xhr.statBox.addEventListener('click',function(e){xhr.abort();xhr.statBox.innerHTML='canceled'},true)
+ xhr.statBox.addEventListener('click',function(e){xhr.abort()},true)
  document.body.appendChild(xhr.statBox)
 }
 
