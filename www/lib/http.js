@@ -1,38 +1,29 @@
 // Copyright(c) gert.cuykens@gmail.com
+xhr=new XMLHttpRequest()
+
 http={
- 'json':'',
- 'event':function(v){},
- 'send':function(v,u){
-  var xmlHttp=new XMLHttpRequest()
-  xmlHttp.open(v,u,true)
-  xmlHttp.setRequestHeader('Content-Type','text/plain;charset=utf-8')
-  xmlHttp.addEventListener('readystatechange',function(){
-   switch(this.readyState){
-    case 1:
-     var v
-     if (v=document.getElementById('status')){v.appendChild(document.createTextNode('processing...'));break}
-     v=document.createElement('div')
-     v.className='status'
-     v.id='status'
-     v.appendChild(document.createTextNode('processing...'))
-     document.body.appendChild(v)
-    break
+ 'send':function(v){
+  xhr.open(v,http.url,true)
+  xhr.setRequestHeader('Content-Type','application/json')
+  if(http.ETag)xhr.setRequestHeader('If-Match',http.ETag)
+  xhr.addEventListener('readystatechange',function(){
+   switch(xhr.readyState){
+    case 1:xhrBox('processing...');break;
     case 4:
-     var v
-     if(v=document.getElementById('status'))v.innerHTML=''
-     v=JSON.parse(this.responseText)
-     if(v.error){alert(v.error)}
-     http.event(v)
+     xhrBox('')
+     http.ETag=xhr.getResponseHeader('ETag')
+     http.text=xhr.responseText
+     http.textEvent()
     break
    }
   },false)
-  xmlHttp.send(http.json)
+  xhr.send(http.json)
  }
 }
 
 upload={
- throbber:function(v){document.getElementById('status').innerHTML=v},
- preview:function(f){
+ 'throbber':function(v){document.getElementById('status').innerHTML=v},
+ 'preview':function(f){
   if (!f.type.match(/image.*/))return false
   upload.box.classList.add('preview')
   upload.box.file=f
@@ -41,22 +32,22 @@ upload={
   reader.onload=(function(i){return function(e){i.src=e.target.result}})(upload.box)
   reader.readAsDataURL(f)
  },
- PUT:function(f){
-  var xhr=new XMLHttpRequest()
-  var div=document.getElementById('status')
-  div.addEventListener('click',function(e){try{xhr.abort()}catch(a){}},true)
-  xhr.upload.addEventListener('loadstart',function(e){upload.throbber(0);upload.preview(file)},false)
+ 'PUT':function(f){
+  xhr.upload.addEventListener('loadstart',function(e){upload.throbber(0);upload.preview(f)},false)
   xhr.upload.addEventListener('progress',function(e){if(e.lengthComputable)upload.throbber(Math.round((e.loaded*100)/e.total))},false)
   xhr.upload.addEventListener('abort',function(e){},false)
   xhr.upload.addEventListener('error',function(e){},false)
-  xhr.upload.addEventListener('load',function(e){upload.throbber(100);session.load()},false)
+  xhr.upload.addEventListener('load',function(e){upload.throbber(100)},false)
   xhr.open('PUT',upload.url,true)
-  xhr.overrideMimeType('text/plain; charset=x-user-defined-binary')
+  //xhr.overrideMimeType('text/plain; charset=x-user-defined-binary')
+  xhr.setRequestHeader('Content-Type','image/png')
+  if(http.ETag)xhr.setRequestHeader('If-Match',http.ETag)
+  //if(upload.ETag)xhr.setRequestHeader('If-Match',upload.ETag)
   xhr.send(f)
  }
 }
 
-dropbox=function(b,u){
+dropBox=function(b){
  var dragenter=function(e){e.stopPropagation();e.preventDefault()}
  var dragover=function(e){e.stopPropagation();e.preventDefault()}
  var drop=function(e){
@@ -69,6 +60,17 @@ dropbox=function(b,u){
  upload.box.addEventListener('dragenter',dragenter,false)
  upload.box.addEventListener('dragover',dragover,false)
  upload.box.addEventListener('drop',drop,false)
- upload.url=u
+}
+
+xhrBox=function(v){
+ var text=document.createTextNode(v)
+ var b=document.getElementById('status')
+ if(b){b.innerHTML='';b.appendChild(text);return 0}
+ b=document.createElement('div')
+ b.className='status'
+ b.id='status'
+ b.appendChild(text)
+ b.addEventListener('click',function(e){xhr.abort();b.innerHTML='canceled'},true)
+ document.body.appendChild(b)
 }
 

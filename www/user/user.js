@@ -1,26 +1,27 @@
 // Copyright(c) gert.cuykens@gmail.com
 user={
- 'GET':function(u){
-  http.event=function(v){
-   document.getElementById('name').value=v['rec'][0][1]
-   document.getElementById('adress').value=v['rec'][0][2]
-   document.getElementById('city').value=v['rec'][0][3]
-   document.getElementById('country').value=v['rec'][0][4]
-   document.getElementById('phone').value=v['rec'][0][5]
-   document.getElementById('email').value=v['rec'][0][6]
-   document.getElementById('box').src='user.png'
+ 'GET':function(){
+  http.textEvent=function(){
+   var v=JSON.parse(http.text)
+   document.getElementById('name').value=v['_id']
+   document.getElementById('adress').value=v['adress']
+   document.getElementById('city').value=v['city']
+   document.getElementById('country').value=v['country']
+   document.getElementById('phone').value=v['phone']
+   document.getElementById('email').value=v['email']
+   document.getElementById('dropBox').src='/user/gert/picture.png'
   }
-  http.send('GET',u)
+  http.send('GET')
  },
- 'PUT':function(u){
-  http.event=function(v){}
-  http.json ='{"name":"'+document.getElementById('name').value+'",\n'
+ 'PUT':function(){
+  http.textEvent=function(v){}
+  http.json ='{"_id":"'+document.getElementById('name').value+'",\n'
   http.json+=' "adress":"'+document.getElementById('adress').value+'",\n'
   http.json+=' "city":"'+document.getElementById('city').value+'",\n'
   http.json+=' "country":"'+document.getElementById('country').value+'",\n'
   http.json+=' "phone":"'+document.getElementById('phone').value+'",\n'
-  http.json+=' "email":"'+document.getElementById('email').value+'"}\n'
-  http.send('PUT',u)
+  http.json+=' "email":"'+document.getElementById('email').value+'"}'
+  http.send('PUT')
  }
 }
 

@@ -15,13 +15,14 @@
    country: <input id="country"/><br/>
    phone:   <input id="phone"/><br/>
    email:   <input id="email"/><br/>
-   <input id="update"  type="button" value="update" onclick="user.PUT('')"/><br/>
-   <img id="box" src="user.png"/>
+   <input id="update"  type="button" value="update" onclick="user.PUT()"/><br/>
+   <img id="dropBox" src="user.png"/>
   </div>
-  <div id="status"/>
   <script>
-   dropbox(document.getElementById('box'),'')
-   user.GET('')
+   http.url='/user/gert'
+   upload.url='/user/gert/picture.png'
+   user.GET()
+   dropBox(document.getElementById('dropBox'))
   </script>
  </body>
 </html>
