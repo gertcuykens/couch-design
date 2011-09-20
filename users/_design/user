@@ -6,7 +6,8 @@
   "put":"function(doc,req){
    var v=JSON.parse(req.body)
    for(i in v)doc[i]=v[i]
-   return [doc,'update put']
+   var r={'headers':{'Content-Type':'application/json'},'body':JSON.stringify(doc)};
+   return [doc,r]
   }"
  }
 }
