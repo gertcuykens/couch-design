@@ -15,7 +15,8 @@
    country: <input id="country"/><br/>
    phone:   <input id="phone"/><br/>
    email:   <input id="email"/><br/>
-   <input id="update"  type="button" value="update" onclick="xhr.open('PUT','/user/gert',false)
+   <input id="update"  type="button" value="update" onclick="xhr.textEvent=function(){}
+                                                             xhr.open('PUT','/users/gert',false)
                                                              xhr.setRequestHeader('Content-Type','application/json')
                                                              if(xhr.ETag)xhr.setRequestHeader('If-Match',xhr.ETag)
                                                              xhr.send(user.json())"/><br/>
@@ -26,11 +27,11 @@
    xhr.dropBox=document.getElementById('dropBox')
 
    xhr.textEvent=user.textEvent
-   xhr.open('GET','/user/gert',false)
+   xhr.open('GET','/users/gert',false)
    xhr.send()
 
    xhr.textEvent=function(){}
-   xhr.open('PUT','/user/gert/picture.png',false)
+   xhr.open('PUT','/users/gert/picture.png',false)
    xhr.setRequestHeader('Content-Type','image/png')
    if(xhr.ETag)xhr.setRequestHeader('If-Match',xhr.ETag)
    dropBox(xhr)

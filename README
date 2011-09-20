@@ -3,7 +3,7 @@
 ./put _users
 ./put _users/_security
 ./user gert passwd \"admin\"
-./user test passwd
+./user user passwd
 ./put www
 ./put www/_security
 ./put www/lib/http.js
@@ -11,5 +11,6 @@
 ./put www/user/user.css
 ./put www/user/user.js
 ./put www/user/user.png
-./put user
+./put users
+#./put users/_design/user
 

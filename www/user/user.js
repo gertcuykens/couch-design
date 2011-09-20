@@ -8,7 +8,7 @@ user.textEvent=function(){
  document.getElementById('country').value=v['country']
  document.getElementById('phone').value=v['phone']
  document.getElementById('email').value=v['email']
- document.getElementById('dropBox').src='/user/gert/picture.png'
+ document.getElementById('dropBox').src='/users/gert/picture.png'
 }
 user.json=function(){
  var j ='{"_id":"'+document.getElementById('name').value+'",\n'
