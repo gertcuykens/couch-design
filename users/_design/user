@@ -1,11 +1,12 @@
 {
  "_id":"_design/user",
  "language":"javascript",
- "validate_doc_update":"function(n,o,u){if(!n[id])throw({forbidden:'no id'});}"
+ "validate_doc_update":"function(n,o,u){if(!n['_id'])throw({forbidden:'no _id'})}",
  "updates":{
-  "PUT":function(doc,req){
-   for(i in req.form)doc[i]=req.form[i]
-   return [doc,'']
-  }
+  "put":"function(doc,req){
+   var v=JSON.parse(req.body)
+   for(i in v)doc[i]=v[i]
+   return [doc,'update put']
+  }"
  }
 }

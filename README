@@ -12,5 +12,5 @@
 ./put www/user/user.js
 ./put www/user/user.png
 ./put users
-#./put users/_design/user
+./put users/_design/user
 
