@@ -16,7 +16,8 @@
     xhr.addEventListener('load',load,false)
     xhr.open('put',document.user.action,false)
     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-    xhr.send(new FormData(document.user))
+    xhr.setRequestHeader('If-Match',document.user['_rev'].value)
+    xhr.send(formURI(document.user))
    },false)
    load=function(){
     document.user.innerHTML=xhr.response

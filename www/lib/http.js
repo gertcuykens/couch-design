@@ -45,11 +45,9 @@ throbber=function(v){
  document.body.appendChild(xhr.statBox)
 }
 
-formEnc=function(v){
- var t=v.getElemetsByTagName('input')
+formURI=function(v){
+ var t=v.getElementsByTagName('input')
  var s=''
- for(i in t){
-  s+=t[i].value+';'
- }
- return s
+ for(i in t)if(t[i].type=='text')s+=encodeURIComponent(t[i].name)+'='+encodeURIComponent(t[i].value)+'&'
+ return s.slice(0,-1)
 }
