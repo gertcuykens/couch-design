@@ -1,9 +1,5 @@
 #!/bin/bash
 # Copyright(c) gert.cuykens@gmail.com
-./put _users
-./put _users/_security
-./user gert passwd \"admin\"
-./user user passwd
 ./put users
 ./put users/_security
 ./put users/_design/user.db
