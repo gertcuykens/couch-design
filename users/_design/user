@@ -32,5 +32,6 @@
 <img id=\"picture\" src=\"/users/'+doc._id+'/picture.png\"/>'
    }
   }"
- }
+ },
+ "filters":{"design":"function(doc,req){return '_design/'===doc._id.substr(0,8)}"}
 }

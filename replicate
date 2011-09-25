@@ -1,0 +1,20 @@
+#!/bin/bash
+# Copyright(c) gert.cuykens@gmail.com
+ADMIN='couchdb:passwd'
+curl -X POST http://localhost:5984/_replicate -H'Content-Type: application/json' -d'{
+ "source":"www",
+ "target":"http://gert.iriscouch.com/www",
+ "continuous":false
+}'
+echo
+curl -X POST http://localhost:5984/_replicate -H'Content-Type: application/json' -d'{
+ "source":"users",
+ "target":"http://gert.iriscouch.com/users",
+ "filter":"user/design"
+}'
+echo
+curl -X GET  http://$ADMIN@localhost:5984/_active_tasks
+#curl -X POST http://localhost:5984/_replicate -H'Content-Type: application/json' -d'{
+# "replication_id":"'$1'",
+# "cancel":true
+#}'

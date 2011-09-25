@@ -4,10 +4,12 @@
  <head>
   <title>user</title>
   <link   type="text/css" href="user.css" rel="stylesheet"/>
-  <script src="../lib/http.js"></script>
+  <script src="/_utils/script/jquery.js"></script>
+  <script src="/_utils/script/jquery.couch.js"></script>
+  <script src="/www/lib/http.js"></script>
  </head>
  <body>
-  <form name="user" enctype="application/x-www-form-urlencoded" action="/users/_design/user/_update/post/gert"/>
+  <form name="user" enctype="application/x-www-form-urlencoded" action="/users/_design/user/_update/post/gert"></form>
   <script>
    submit=document.createElement('input')
    submit.type='button'
@@ -34,5 +36,10 @@
    xhr.setRequestHeader('If-Match',document.user['_rev'].value)
    dropBox(xhr)
   </script>
+  <form name="login" method="post" action="javascript:$.couch.login({name:document.login['u'].value,password:document.login['p'].value})">
+   <label>user:</label>     <input name="u"/><br/>
+   <label>password:</label> <input name="p"/><br/>
+   <input type="submit" value="login"/><br/>
+  </form>
  </body>
 </html>
