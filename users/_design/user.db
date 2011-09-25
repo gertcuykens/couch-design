@@ -1,6 +1,4 @@
 {
- "_id":"_design/user",
- "language":"javascript",
  "validate_doc_update":"function(n,o,u){if(!n['_id'])throw({forbidden:'no _id'})}",
  "updates":{
   "post":"function(doc,req){
