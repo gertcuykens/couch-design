@@ -5,35 +5,32 @@
   <title>user</title>
   <link   type="text/css" href="user.css" rel="stylesheet"/>
   <script src="../lib/http.js"></script>
-  <script src="user.js"></script>
  </head>
  <body>
-  <div id="register">
-   name:    <input id="name"/><br/>
-   adress:  <input id="adress"/><br/>
-   city:    <input id="city"/><br/>
-   country: <input id="country"/><br/>
-   phone:   <input id="phone"/><br/>
-   email:   <input id="email"/><br/>
-   <input id="update"  type="button" value="update" onclick="xhr.textEvent=function(){}
-                                                             xhr.open('PUT','/users/_design/user/_update/put/gert',false)
-                                                             xhr.setRequestHeader('Content-Type','application/json')
-                                                             if(xhr.ETag)xhr.setRequestHeader('If-Match',xhr.ETag)
-                                                             xhr.send(user.json())"/><br/>
-   <img id="dropBox" src="user.png"/>
-  </div>
+  <form name="user" enctype="application/x-www-form-urlencoded" action="/users/_design/user/_update/post/gert"/>
   <script>
-   xhr.statBox=document.getElementById('statBox')
-   xhr.dropBox=document.getElementById('dropBox')
-
-   xhr.textEvent=user.textEvent
-   xhr.open('GET','/users/gert',false)
+   submit=document.createElement('input')
+   submit.type='button'
+   submit.value='update'
+   submit.addEventListener('click',function(){
+    xhr.addEventListener('load',load,false)
+    xhr.open('put',document.user.action,false)
+    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+    xhr.send(new FormData(document.user))
+   },false)
+   load=function(){
+    document.user.innerHTML=xhr.response
+    document.user.appendChild(submit)
+    //ETag=xhr.getResponseHeader('ETag')
+    xhr.removeEventListener('load',load,false)
+   }
+   xhr.open('get','/users/_design/user/_show/html/gert',false)
+   xhr.addEventListener('load',load,false)
    xhr.send()
-
-   xhr.textEvent=function(){}
-   xhr.open('PUT','/users/gert/picture.png',false)
+   xhr.dropBox=document.getElementById('picture')
+   xhr.open('put','/users/gert/picture.png',false)
    xhr.setRequestHeader('Content-Type','image/png')
-   if(xhr.ETag)xhr.setRequestHeader('If-Match',xhr.ETag)
+   xhr.setRequestHeader('If-Match',document.user['_rev'].value)
    dropBox(xhr)
   </script>
  </body>

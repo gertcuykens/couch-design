@@ -4,19 +4,7 @@ xhr.addEventListener('loadstart',function(e){throbber(0)},false)
 xhr.addEventListener('progress',function(e){if(e.lengthComputable)throbber(Math.round((e.loaded*100)/e.total))},false)
 xhr.addEventListener('abort',function(e){throbber('')},false)
 xhr.addEventListener('error',function(e){throbber('error')},false)
-xhr.addEventListener('load',function(e){
- xhr.ETag=xhr.getResponseHeader('ETag')
- xhr.text=xhr.responseText
- xhr.textEvent()
- throbber(100)
-},false)
-
-/*xhr.addEventListener('readystatechange',function(){
- switch(xhr.readyState){
-  case 1:throbber('processing...');break
-  case 4:throbber('')break
- }
-},false)*/
+xhr.addEventListener('load',function(e){throbber(100)},false)
 
 preview=function(f){
  if (!f.type.match(/image.*/))return false
@@ -57,3 +45,11 @@ throbber=function(v){
  document.body.appendChild(xhr.statBox)
 }
 
+formEnc=function(v){
+ var t=v.getElemetsByTagName('input')
+ var s=''
+ for(i in t){
+  s+=t[i].value+';'
+ }
+ return s
+}

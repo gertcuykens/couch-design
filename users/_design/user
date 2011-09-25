@@ -3,11 +3,34 @@
  "language":"javascript",
  "validate_doc_update":"function(n,o,u){if(!n['_id'])throw({forbidden:'no _id'})}",
  "updates":{
-  "put":"function(doc,req){
-   var v=JSON.parse(req.body)
-   for(i in v)doc[i]=v[i]
-   var r={'headers':{'Content-Type':'application/json'},'body':JSON.stringify(doc)};
-   return [doc,r]
+  "post":"function(doc,req){
+   for(i in req.form)doc[i]=req.form[i]
+   return [doc,{'headers':{'Content-Type':'text/html'},
+                'body':'\
+<label>adress:</label>  <input name=\"adress\"  value=\"'+doc.adress+'\"/><br/>\\n\
+<label>city:</label>    <input name=\"city\"    value=\"'+doc.city+'\"/><br/>\\n\
+<label>country:</label> <input name=\"country\" value=\"'+doc.country+'\"/><br/>\\n\
+<label>phone:</label>   <input name=\"phone\"   value=\"'+doc.phone+'\"/><br/>\\n\
+<label>email:</label>   <input name=\"email\"   value=\"'+doc.email+'\"/><br/>\\n\
+<input name=\"_id\"  value=\"'+doc._id+'\"  type=\"hidden\"/>\\n\
+<input name=\"_rev\" value=\"'+doc._rev+'\" type=\"hidden\"/>\\n\
+<img id=\"picture\" src=\"/users/'+doc._id+'/picture.png\"/>'
+   }]
+  }"
+ },
+ "shows":{
+  "html":"function(doc,req){
+   return {headers:{'Content-Type':'text/html'},
+           body:'\
+<label>adress:</label>  <input name=\"adress\"  value=\"'+doc.adress+'\"/><br/>\\n\
+<label>city:</label>    <input name=\"city\"    value=\"'+doc.city+'\"/><br/>\\n\
+<label>country:</label> <input name=\"country\" value=\"'+doc.country+'\"/><br/>\\n\
+<label>phone:</label>   <input name=\"phone\"   value=\"'+doc.phone+'\"/><br/>\\n\
+<label>email:</label>   <input name=\"email\"   value=\"'+doc.email+'\"/><br/>\\n\
+<input name=\"_id\"  value=\"'+doc._id+'\"  type=\"hidden\"/>\\n\
+<input name=\"_rev\" value=\"'+doc._rev+'\" type=\"hidden\"/>\\n\
+<img id=\"picture\" src=\"/users/'+doc._id+'/picture.png\"/>'
+   }
   }"
  }
 }
