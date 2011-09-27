@@ -5,6 +5,6 @@
  },
  "readers" : {
   "names" : [],
-  "roles" : ["admin"]
+  "roles" : []
  }
 }

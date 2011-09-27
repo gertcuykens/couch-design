@@ -9,32 +9,43 @@
   <script src="http.js"></script>
  </head>
  <body>
-  <form name="user" enctype="application/x-www-form-urlencoded" action="/users/_design/user/_update/post/gert"></form>
+  <form name="user" enctype="application/x-www-form-urlencoded" action="javascript:submit(document.user)">
+   <label>adress:</label>  <input name="adress" /><br/>
+   <label>city:</label>    <input name="city"   /><br/>
+   <label>country:</label> <input name="country"/><br/>
+   <label>phone:</label>   <input name="phone"  /><br/>
+   <label>email:</label>   <input name="email"  /><br/>
+   <img id="picture" src="/users/gert/picture.png"/>
+   <input type="submit" value="update"/>
+  </form>
+  <div id="statBox" class="statBox"></div>
   <script>
-   submit=document.createElement('input')
-   submit.type='button'
-   submit.value='update'
-   submit.addEventListener('click',function(){
-    xhr.addEventListener('load',load,false)
-    xhr.open('put',document.user.action,false)
-    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-    xhr.setRequestHeader('If-Match',document.user['_rev'].value)
-    xhr.send(formURI(document.user))
-   },false)
+   document.getElementById('statBox').addEventListener('click',function(e){xhr.abort()},false)
+   dropBox(document.getElementById('picture'))
+
    load=function(){
-    document.user.innerHTML=xhr.response
-    document.user.appendChild(submit)
-    //ETag=xhr.getResponseHeader('ETag')
+    var i,v=JSON.parse(xhr.response)
+    for(i in v){if(document.user[i])document.user[i].value=v[i]}
+    ETag=xhr.getResponseHeader('ETag')
     xhr.removeEventListener('load',load,false)
    }
-   xhr.open('get','_show/html/gert',false)
+
+   xhr.open('get','/users/gert',false)
    xhr.addEventListener('load',load,false)
    xhr.send()
-   xhr.dropBox=document.getElementById('picture')
-   xhr.open('put','/users/gert/picture.png',false)
-   xhr.setRequestHeader('Content-Type','image/png')
-   xhr.setRequestHeader('If-Match',document.user['_rev'].value)
-   dropBox(xhr)
+
+   submit=function(f){
+    load=function(){
+     //var v=JSON.parse(xhr.response)
+     ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
+     xhr.removeEventListener('load',load,false)
+    }
+    xhr.addEventListener('load',load,false)
+    xhr.open('post','_update/form/gert',false)
+    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+    xhr.setRequestHeader('If-Match',ETag)
+    xhr.send(formURI(f))
+   }
   </script>
   <form name="login" method="post" action="javascript:$.couch.login({name:document.login['u'].value,password:document.login['p'].value})">
    <label>user:</label>     <input name="u"/><br/>

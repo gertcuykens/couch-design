@@ -16,33 +16,36 @@ preview=function(f){
  reader.readAsDataURL(f)
 }
 
-dropBox=function(x){
+dropBox=function(d){
  var dragenter=function(e){e.stopPropagation();e.preventDefault()}
  var dragover=function(e){e.stopPropagation();e.preventDefault()}
  var drop=function(e){
-  xhr.textEvent=function(v){}
   e.stopPropagation()
   e.preventDefault()
   var f = e.dataTransfer.files
   for (var i=0;i<f.length;i++){
    preview(f[i])
-   x.send(f[i])
+   load=function(){
+    ETag=xhr.getResponseHeader('ETag')
+    xhr.removeEventListener('load',load,false)
+   }
+   xhr.addEventListener('load',load,false)
+   xhr.open('put','/users/gert/picture.png',false)
+   xhr.setRequestHeader('Content-Type','image/png')
+   xhr.setRequestHeader('If-Match',ETag)
+   xhr.send(f[i])
   }
  }
- xhr.dropBox.addEventListener('dragenter',dragenter,false)
- xhr.dropBox.addEventListener('dragover',dragover,false)
- xhr.dropBox.addEventListener('drop',drop,false)
+ d.addEventListener('dragenter',dragenter,false)
+ d.addEventListener('dragover',dragover,false)
+ d.addEventListener('drop',drop,false)
+ xhr.dropBox=d
 }
 
 throbber=function(v){
  var text=document.createTextNode(v)
- if(xhr.statBox){xhr.statBox.innerHTML='';xhr.statBox.appendChild(text);return 0}
- xhr.statBox=document.createElement('div')
- xhr.statBox.className='statBox'
- xhr.statBox.id='statBox'
- xhr.statBox.appendChild(text)
- xhr.statBox.addEventListener('click',function(e){xhr.abort()},true)
- document.body.appendChild(xhr.statBox)
+ statBox.innerHTML=''
+ statBox.appendChild(text)
 }
 
 formURI=function(v){

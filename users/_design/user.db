@@ -1,35 +1,5 @@
 {
  "validate_doc_update":"function(n,o,u){if(!n['_id'])throw({forbidden:'no _id'})}",
- "updates":{
-  "post":"function(doc,req){
-   for(i in req.form)doc[i]=req.form[i]
-   return [doc,{'headers':{'Content-Type':'text/html'},
-                'body':'\
-<label>adress:</label>  <input name=\"adress\"  value=\"'+doc.adress+'\"/><br/>\\n\
-<label>city:</label>    <input name=\"city\"    value=\"'+doc.city+'\"/><br/>\\n\
-<label>country:</label> <input name=\"country\" value=\"'+doc.country+'\"/><br/>\\n\
-<label>phone:</label>   <input name=\"phone\"   value=\"'+doc.phone+'\"/><br/>\\n\
-<label>email:</label>   <input name=\"email\"   value=\"'+doc.email+'\"/><br/>\\n\
-<input name=\"_id\"  value=\"'+doc._id+'\"  type=\"hidden\"/>\\n\
-<input name=\"_rev\" value=\"'+doc._rev+'\" type=\"hidden\"/>\\n\
-<img id=\"picture\" src=\"/users/'+doc._id+'/picture.png\"/>'
-   }]
-  }"
- },
- "shows":{
-  "html":"function(doc,req){
-   return {headers:{'Content-Type':'text/html'},
-           body:'\
-<label>adress:</label>  <input name=\"adress\"  value=\"'+doc.adress+'\"/><br/>\\n\
-<label>city:</label>    <input name=\"city\"    value=\"'+doc.city+'\"/><br/>\\n\
-<label>country:</label> <input name=\"country\" value=\"'+doc.country+'\"/><br/>\\n\
-<label>phone:</label>   <input name=\"phone\"   value=\"'+doc.phone+'\"/><br/>\\n\
-<label>email:</label>   <input name=\"email\"   value=\"'+doc.email+'\"/><br/>\\n\
-<input name=\"_id\"  value=\"'+doc._id+'\"  type=\"hidden\"/>\\n\
-<input name=\"_rev\" value=\"'+doc._rev+'\" type=\"hidden\"/>\\n\
-<img id=\"picture\" src=\"/users/'+doc._id+'/picture.png\"/>'
-   }
-  }"
- },
- "filters":{"design":"function(doc,req){return '_design/'===doc._id.substr(0,8)}"}
+ "updates":{"form":"function(doc,req){for(i in req.form)doc[i]=req.form[i];return [doc,{headers:{'Content-Type':'application/json','ETag':doc._rev},body:'{ok:200}'}]}"},
+ "filters":{"design":"function(doc,req){return '_design/'===doc._id.substr(0,8)}"},
 }
