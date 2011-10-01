@@ -26,7 +26,6 @@
    load=function(){
     var i,v=JSON.parse(xhr.response)
     for(i in v){if(document.user[i])document.user[i].value=v[i]}
-    ETag=xhr.getResponseHeader('ETag')
     xhr.removeEventListener('load',load,false)
    }
 
@@ -34,14 +33,14 @@
    xhr.addEventListener('load',load,false)
    xhr.send()
 
-   submit=function(f){
-    load=function(){
-     //var v=JSON.parse(xhr.response)
+   load=function(){
      ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
      xhr.removeEventListener('load',load,false)
-    }
+   }
+
+   submit=function(f){
+    xhr.open('put','_update/form/gert',false)
     xhr.addEventListener('load',load,false)
-    xhr.open('post','_update/form/gert',false)
     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
     xhr.setRequestHeader('If-Match',ETag)
     xhr.send(formURI(f))

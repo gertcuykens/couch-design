@@ -5,14 +5,15 @@ xhr.addEventListener('progress',function(e){if(e.lengthComputable)throbber(Math.
 xhr.addEventListener('abort',function(e){throbber('')},false)
 xhr.addEventListener('error',function(e){throbber('error')},false)
 xhr.addEventListener('load',function(e){throbber(100)},false)
+xhr.addEventListener('load',function(e){ETag=xhr.getResponseHeader('ETag')},false)
 
-preview=function(f){
+preview=function(f,d){
  if (!f.type.match(/image.*/))return false
- xhr.dropBox.classList.add('preview')
- xhr.dropBox.file=f
+ d.classList.add('preview')
+ d.file=f
  var reader=new FileReader()
- //reader.addEventListener('load',(function(i){return function(e){i.src=e.target.result}})(img),false)
- reader.onload=(function(i){return function(e){i.src=e.target.result}})(xhr.dropBox)
+ //reader.addEventListener('load',(function(i){return function(e){i.src=e.target.result}})(d),false)
+ reader.onload=(function(i){return function(e){i.src=e.target.result}})(d)
  reader.readAsDataURL(f)
 }
 
@@ -24,12 +25,7 @@ dropBox=function(d){
   e.preventDefault()
   var f = e.dataTransfer.files
   for (var i=0;i<f.length;i++){
-   preview(f[i])
-   load=function(){
-    ETag=xhr.getResponseHeader('ETag')
-    xhr.removeEventListener('load',load,false)
-   }
-   xhr.addEventListener('load',load,false)
+   preview(f[i],d)
    xhr.open('put','/users/gert/picture.png',false)
    xhr.setRequestHeader('Content-Type','image/png')
    xhr.setRequestHeader('If-Match',ETag)
@@ -39,7 +35,6 @@ dropBox=function(d){
  d.addEventListener('dragenter',dragenter,false)
  d.addEventListener('dragover',dragover,false)
  d.addEventListener('drop',drop,false)
- xhr.dropBox=d
 }
 
 throbber=function(v){
@@ -53,4 +48,8 @@ formURI=function(v){
  var s=''
  for(i in t)if(t[i].type=='text')s+=encodeURIComponent(t[i].name)+'='+encodeURIComponent(t[i].value)+'&'
  return s.slice(0,-1)
+}
+
+formJSON=function(v){
+
 }
