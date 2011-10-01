@@ -4,52 +4,62 @@
  <head>
   <title>user</title>
   <link   type="text/css" href="user.css" rel="stylesheet"/>
-  <script src="/_utils/script/jquery.js"></script>
-  <script src="/_utils/script/jquery.couch.js"></script>
   <script src="http.js"></script>
  </head>
  <body>
-  <form name="user" enctype="application/x-www-form-urlencoded" action="javascript:submit(document.user)">
+  <div id="statBox" class="statBox"></div>
+  <script>
+   document.getElementById('statBox').addEventListener('click',function(e){xhr.abort()},false)
+  </script>
+
+  <form name="user" action="javascript:update(document.user)">
    <label>adress:</label>  <input name="adress" /><br/>
    <label>city:</label>    <input name="city"   /><br/>
    <label>country:</label> <input name="country"/><br/>
    <label>phone:</label>   <input name="phone"  /><br/>
    <label>email:</label>   <input name="email"  /><br/>
-   <img id="picture" src="/users/gert/picture.png"/>
+   <img id="picture" alt="picture" src="/users/gert/picture.png"/>
    <input type="submit" value="update"/>
-  </form>
-  <div id="statBox" class="statBox"></div>
-  <script>
-   document.getElementById('statBox').addEventListener('click',function(e){xhr.abort()},false)
-   dropBox(document.getElementById('picture'))
+   <script>
+    dropBox(document.getElementById('picture'))
 
-   load=function(){
-    var i,v=JSON.parse(xhr.response)
-    for(i in v){if(document.user[i])document.user[i].value=v[i]}
-    xhr.removeEventListener('load',load,false)
-   }
-
-   xhr.open('get','/users/gert',false)
-   xhr.addEventListener('load',load,false)
-   xhr.send()
-
-   load=function(){
-     ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
+    load=function(){
+     var i,v=JSON.parse(xhr.response)
+     for(i in v){if(document.user[i])document.user[i].value=v[i]}
      xhr.removeEventListener('load',load,false)
-   }
+    }
 
-   submit=function(f){
-    xhr.open('put','_update/form/gert',false)
+    xhr.open('get','/users/gert',false)
     xhr.addEventListener('load',load,false)
-    xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-    xhr.setRequestHeader('If-Match',ETag)
-    xhr.send(formURI(f))
-   }
-  </script>
-  <form name="login" method="post" action="javascript:$.couch.login({name:document.login['u'].value,password:document.login['p'].value})">
-   <label>user:</label>     <input name="u"/><br/>
-   <label>password:</label> <input name="p"/><br/>
-   <input type="submit" value="login"/><br/>
+    xhr.send()
+
+    load=function(){
+      ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
+      xhr.removeEventListener('load',load,false)
+    }
+
+    update=function(f){
+     xhr.open('put','_update/form/gert',false)
+     xhr.addEventListener('load',load,false)
+     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     xhr.setRequestHeader('If-Match',ETag)
+     xhr.send(formURI(f))
+    }
+   </script>
   </form>
+
+  <form name="login" action="javascript:login(document.login)">
+   <label>name:</label>     <input name="name"/><br/>
+   <label>password:</label> <input name="password"/><br/>
+   <input type="submit" value="login"/><br/>
+   <script>
+    login=function(f){
+     xhr.open('post','/_session',false)
+     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     xhr.send(formURI(f))
+    }
+   </script>
+  </form>
+
  </body>
 </html>
