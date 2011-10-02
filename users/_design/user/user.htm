@@ -3,14 +3,17 @@
 <html>
  <head>
   <title>user</title>
-  <link   type="text/css" href="user.css" rel="stylesheet"/>
+  <link type="text/css" href="user.css" rel="stylesheet"/>
   <script src="http.js"></script>
  </head>
  <body>
-  <div id="statBox" class="statBox"></div>
-  <script>
-   document.getElementById('statBox').addEventListener('click',function(e){xhr.abort()},false)
-  </script>
+  <progress id="statBox" class="statBox" value="0" max="100">
+   <script>
+    statBox=document.getElementById('statBox')
+    statBox.addEventListener('click',function(e){xhr.abort()},false)
+    statBox.style.display='none'
+   </script>
+  </progress>
 
   <form name="user" action="javascript:update(document.user)">
    <label>adress:</label>  <input name="adress" /><br/>
@@ -29,7 +32,7 @@
      xhr.removeEventListener('load',load,false)
     }
 
-    xhr.open('get','/users/gert',false)
+    xhr.open('get','/users/gert',true)
     xhr.addEventListener('load',load,false)
     xhr.send()
 
@@ -39,7 +42,7 @@
     }
 
     update=function(f){
-     xhr.open('put','_update/form/gert',false)
+     xhr.open('put','_update/form/gert',true)
      xhr.addEventListener('load',load,false)
      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
      xhr.setRequestHeader('If-Match',ETag)
@@ -54,7 +57,7 @@
    <input type="submit" value="login"/><br/>
    <script>
     login=function(f){
-     xhr.open('post','/_session',false)
+     xhr.open('post','/_session',true)
      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
      xhr.send(formURI(f))
     }
