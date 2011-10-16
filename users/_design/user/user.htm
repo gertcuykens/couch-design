@@ -26,24 +26,24 @@
    <script>
     dropBox(document.getElementById('picture'))
 
-    load=function(){
+    get=function(){
      var i,v=JSON.parse(xhr.response)
      for(i in v){if(document.user[i])document.user[i].value=v[i]}
-     xhr.removeEventListener('load',load,false)
+     xhr.removeEventListener('load',get,false)
     }
 
     xhr.open('get','/users/gert',true)
-    xhr.addEventListener('load',load,false)
+    xhr.addEventListener('load',get,false)
     xhr.send()
 
-    load=function(){
+    put=function(){
       ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
-      xhr.removeEventListener('load',load,false)
+      xhr.removeEventListener('load',put,false)
     }
 
     update=function(f){
      xhr.open('put','_update/form/gert',true)
-     xhr.addEventListener('load',load,false)
+     xhr.addEventListener('load',put,false)
      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
      xhr.setRequestHeader('If-Match',ETag)
      xhr.send(formURI(f))
