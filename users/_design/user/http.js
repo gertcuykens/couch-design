@@ -1,13 +1,22 @@
 // Copyright(c) gert.cuykens@gmail.com
-xhr=new XMLHttpRequest()
-xhr.addEventListener('loadstart',function(e){statBox.style.display='inline-block'},false)
-xhr.addEventListener('loadstart',function(e){statBox.style.backgroundColor='green'},false)
-xhr.addEventListener('loadstart',function(e){statBox.value=0},false)
-xhr.addEventListener('abort',function(e){statBox.style.display='none'},false)
-xhr.addEventListener('progress',function(e){if(e.lengthComputable)statBox.value=Math.round((e.loaded*100)/e.total)},false)
-xhr.addEventListener('error',function(e){statBox.style.backgroundColor='red'},false)
-xhr.addEventListener('load',function(e){ETag=xhr.getResponseHeader('ETag')},false)
-xhr.addEventListener('load',function(e){statBox.style.display='none'},false)
+xhr=function(){
+ var x=new XMLHttpRequest()
+ var statBox=document.createElement('progress')
+ statBox.value=0
+ statBox.max=100
+ statBox.style.display='none'
+ statBox.addEventListener('click',function(e){x.abort()},false)
+ document.body.appendChild(statBox)
+ x.addEventListener('loadstart',function(e){statBox.style.display='inline-block'},false)
+ x.addEventListener('loadstart',function(e){statBox.style.backgroundColor='green'},false)
+ x.addEventListener('loadstart',function(e){statBox.value=0},false)
+ x.addEventListener('abort',function(e){statBox.style.display='none'},false)
+ x.addEventListener('progress',function(e){if(e.lengthComputable)statBox.value=Math.round((e.loaded*100)/e.total)},false)
+ x.addEventListener('error',function(e){statBox.style.backgroundColor='red'},false)
+ x.addEventListener('load',function(e){ETag=x.getResponseHeader('ETag')},false)
+ x.addEventListener('load',function(e){statBox.style.display='none'},false)
+ return x
+}
 
 preview=function(f,d){
  if (!f.type.match(/image.*/))return false
@@ -28,10 +37,11 @@ dropBox=function(d){
   var f = e.dataTransfer.files
   for (var i=0;i<f.length;i++){
    preview(f[i],d)
-   xhr.open('put','/users/gert/picture.png',true)
-   xhr.setRequestHeader('Content-Type','image/png')
-   xhr.setRequestHeader('If-Match',ETag)
-   xhr.send(f[i])
+   x=new xhr()
+   x.open('put','/users/gert/picture.png',true)
+   x.setRequestHeader('Content-Type','image/png')
+   x.setRequestHeader('If-Match',ETag)
+   x.send(f[i])
   }
  }
  d.addEventListener('dragenter',dragenter,false)

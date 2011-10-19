@@ -7,60 +7,57 @@
   <script src="http.js"></script>
  </head>
  <body>
-  <progress id="statBox" class="statBox" value="0" max="100">
-   <script>
-    statBox=document.getElementById('statBox')
-    statBox.addEventListener('click',function(e){xhr.abort()},false)
-    statBox.style.display='none'
-   </script>
-  </progress>
 
-  <form name="user" action="javascript:update(document.user)">
+  <form name="dropBox" action="javascript:return null">
+   <img id="picture" alt="picture" src="/users/gert/picture.png"/>
+   <script>dropBox(document.getElementById('picture'))</script>
+  </form>
+
+  <form name="user" action="javascript:user.send(formURI(document.user))">
    <label>adress:</label>  <input name="adress" /><br/>
    <label>city:</label>    <input name="city"   /><br/>
    <label>country:</label> <input name="country"/><br/>
    <label>phone:</label>   <input name="phone"  /><br/>
    <label>email:</label>   <input name="email"  /><br/>
-   <img id="picture" alt="picture" src="/users/gert/picture.png"/>
    <input type="submit" value="update"/>
    <script>
-    dropBox(document.getElementById('picture'))
-
     get=function(){
-     var i,v=JSON.parse(xhr.response)
+     var i,v=JSON.parse(user.response)
      for(i in v){if(document.user[i])document.user[i].value=v[i]}
-     xhr.removeEventListener('load',get,false)
+     user.removeEventListener('load',get,false)
+     user.open('put','_update/form/gert',true)
+     user.addEventListener('load',function(){ETag=user.getResponseHeader('X-Couch-Update-NewRev')},false)
+     user.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     user.setRequestHeader('If-Match',ETag)
     }
-
-    xhr.open('get','/users/gert',true)
-    xhr.addEventListener('load',get,false)
-    xhr.send()
-
-    put=function(){
-      ETag=xhr.getResponseHeader('X-Couch-Update-NewRev')
-      xhr.removeEventListener('load',put,false)
-    }
-
-    update=function(f){
-     xhr.open('put','_update/form/gert',true)
-     xhr.addEventListener('load',put,false)
-     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-     xhr.setRequestHeader('If-Match',ETag)
-     xhr.send(formURI(f))
-    }
+    user=new xhr()
+    user.open('get','/users/gert',true)
+    user.addEventListener('load',get,false)
+    user.send()
    </script>
   </form>
 
-  <form name="login" action="javascript:login(document.login)">
+  <form name="login" action="javascript:login.send(formURI(document.login))">
    <label>name:</label>     <input name="name"/><br/>
    <label>password:</label> <input name="password"/><br/>
    <input type="submit" value="login"/><br/>
    <script>
-    login=function(f){
-     xhr.open('post','/_session',true)
-     xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-     xhr.send(formURI(f))
-    }
+    login=new xhr()
+    login.open('post','/_session',true)
+    login.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+   </script>
+  </form>
+
+  <form name="oauth2" action="javascript:oauth2.send()">
+   <input type="submit" value="oauth2"/><br/>
+   <script>
+    var url='https://accounts.google.com/o/oauth2/auth?\
+             client_id=21302922996.apps.googleusercontent.com&\
+             redirect_uri=https://www.example.com/back&\
+             scope=https://www.google.com/m8/feeds/&\
+             response_type=token'
+    oauth2=new xhr()
+    oauth2.open('get',url,true)
    </script>
   </form>
 
