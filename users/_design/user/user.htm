@@ -13,7 +13,10 @@
    <script>dropBox(document.getElementById('picture'))</script>
   </form>
 
-  <form name="user" action="javascript:user.send(formURI(document.user))">
+  <form name="user" action="javascript:user.open('put','_update/form/gert',true);
+                                       user.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+                                       user.setRequestHeader('If-Match',ETag);
+                                       user.send(formURI(document.user));">
    <label>adress:</label>  <input name="adress" /><br/>
    <label>city:</label>    <input name="city"   /><br/>
    <label>country:</label> <input name="country"/><br/>
@@ -25,10 +28,7 @@
      var i,v=JSON.parse(user.response)
      for(i in v){if(document.user[i])document.user[i].value=v[i]}
      user.removeEventListener('load',get,false)
-     user.open('put','_update/form/gert',true)
      user.addEventListener('load',function(){ETag=user.getResponseHeader('X-Couch-Update-NewRev')},false)
-     user.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-     user.setRequestHeader('If-Match',ETag)
     }
     user=new xhr()
     user.open('get','/users/gert',true)
