@@ -13,10 +13,7 @@
    <script>dropBox(document.getElementById('picture'))</script>
   </form>
 
-  <form name="user" action="javascript:user.open('put','_update/form/gert',true);
-                                       user.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-                                       user.setRequestHeader('If-Match',ETag);
-                                       user.send(formURI(document.user));">
+  <form name="user" action="javascript:user()">
    <label>adress:</label>  <input name="adress" /><br/>
    <label>city:</label>    <input name="city"   /><br/>
    <label>country:</label> <input name="country"/><br/>
@@ -25,39 +22,51 @@
    <input type="submit" value="update"/>
    <script>
     get=function(){
-     var i,v=JSON.parse(user.response)
+     var i,v=JSON.parse(userx.response)
      for(i in v){if(document.user[i])document.user[i].value=v[i]}
-     user.removeEventListener('load',get,false)
-     user.addEventListener('load',function(){ETag=user.getResponseHeader('X-Couch-Update-NewRev')},false)
+     userx.removeEventListener('load',get,false)
+     userx.addEventListener('load',function(){ETag=userx.getResponseHeader('X-Couch-Update-NewRev')},false)
     }
-    user=new xhr()
-    user.open('get','/users/gert',true)
-    user.addEventListener('load',get,false)
-    user.send()
+    userx=new xhr()
+    userx.open('get','/users/gert',true)
+    userx.addEventListener('load',get,false)
+    userx.send()
+    user=function(){
+     userx.open('put','_update/form/gert',true);
+     userx.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+     userx.setRequestHeader('If-Match',ETag);
+     userx.send(formURI(document.user));
+    }
    </script>
   </form>
 
-  <form name="login" action="javascript:login.send(formURI(document.login))">
+  <form name="login" action="javascript:login()">
    <label>name:</label>     <input name="name"/><br/>
    <label>password:</label> <input name="password"/><br/>
    <input type="submit" value="login"/><br/>
    <script>
-    login=new xhr()
-    login.open('post','/_session',true)
-    login.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+    loginx=new xhr()
+    login=function(){
+     loginx.open('post','/_session',true)
+     loginx.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     loginx.send(formURI(document.login))
+    }
    </script>
   </form>
 
-  <form name="oauth2" action="javascript:oauth2.send()">
+  <form name="oauth2" action="javascript:oauth2()">
    <input type="submit" value="oauth2"/><br/>
    <script>
-    var url='https://accounts.google.com/o/oauth2/auth?\
-             client_id=21302922996.apps.googleusercontent.com&\
-             redirect_uri=https://www.example.com/back&\
-             scope=https://www.google.com/m8/feeds/&\
-             response_type=token'
-    oauth2=new xhr()
-    oauth2.open('get',url,true)
+    url='https://accounts.google.com/o/oauth2/auth?\
+         client_id=21302922996.apps.googleusercontent.com&\
+         redirect_uri=https://www.example.com/back&\
+         scope=https://www.google.com/m8/feeds/&\
+         response_type=token'
+    oauth2x=new xhr()
+    oauth2=function(){
+     oauth2x.open('get',url,true)
+     oauth2x.send()
+    }
    </script>
   </form>
 
