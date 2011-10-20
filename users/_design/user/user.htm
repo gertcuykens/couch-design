@@ -57,11 +57,11 @@
   <form name="oauth2" action="javascript:oauth2()">
    <input type="submit" value="oauth2"/><br/>
    <script>
-    url='https://accounts.google.com/o/oauth2/auth?\
-         client_id=21302922996.apps.googleusercontent.com&\
-         redirect_uri=https://www.example.com/back&\
-         scope=https://www.google.com/m8/feeds/&\
-         response_type=token'
+    url='https://accounts.google.com/o/oauth2/auth?'+
+        'client_id=21302922996.apps.googleusercontent.com&'+
+        'redirect_uri=https://www.example.com/back&'+
+        'scope=https://www.google.com/m8/feeds/&'+
+        'response_type=token'
     oauth2x=new xhr()
     oauth2=function(){
      oauth2x.open('get',url,true)
