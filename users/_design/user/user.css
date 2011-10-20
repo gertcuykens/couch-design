@@ -8,11 +8,11 @@ form {padding-top:5px;
 input {width:142px;margin:2px;}
 input[type="submit"]{width:146px;}
 
+progress{position:absolute;
+         left:260px;top:129px;
+         width:146px;}
+
 #picture{position:absolute;
          left:260px;top:10px;
          width:146px;height:113px;}
-
-#progress{position:absolute;
-          left:260px;top:129px;
-          width:146px;}
 
