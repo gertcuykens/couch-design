@@ -8,11 +8,6 @@
  </head>
  <body>
 
-  <form name="dropBox" action="javascript:return null">
-   <img id="picture" alt="picture" src="/users/gert/picture.png"/>
-   <script>dropBox(document.getElementById('picture'))</script>
-  </form>
-
   <form name="user" action="javascript:user()">
    <label>adress:</label>  <input name="adress" /><br/>
    <label>city:</label>    <input name="city"   /><br/>
@@ -68,6 +63,11 @@
      oauth2x.send()
     }
    </script>
+  </form>
+
+  <form name="dropBox" action="javascript:return null">
+   <img id="picture" alt="picture" src="/users/gert/picture.png"/>
+   <script>dropBox(document.getElementById('picture'))</script>
   </form>
 
  </body>

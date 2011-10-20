@@ -1,7 +1,7 @@
 /* Copyright(c) gert.cuykens@gmail.com */
 * {margin:0px;padding:0px;}
 
-form {padding-top:5px;
+form {padding-top:10px;
       width:250px;
       text-align:right;}
 
@@ -13,6 +13,6 @@ progress{position:absolute;
          width:146px;}
 
 #picture{position:absolute;
-         left:260px;top:10px;
+         left:260px;top:12px;
          width:146px;height:113px;}
 
