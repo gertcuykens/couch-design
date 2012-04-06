@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- Copyright(c) gert.cuykens@gmail.com -->
+<html>
+ <head>
+  <title>user</title>
+  <link type="text/css" href="../css/users.css" rel="stylesheet"/>
+  <script src="../js/http.js"></script>
+ </head>
+ <body>
+
+  <script>
+   x=new xhr()
+   x.open('get','/_session',true)
+   x.addEventListener('load',function(){
+    var v=JSON.parse(this.response)
+    userCtx=v["userCtx"]
+    console.log("userCtx=",userCtx)
+    if(!userCtx.name)return 0
+    var x=new xhr()
+    x.open('get','/users/'+userCtx.name,true)
+    x.addEventListener('load',function(){
+     var i,v=JSON.parse(this.response)
+     for(i in v){if(document.user[i])document.user[i].value=v[i]}
+     document.getElementById('picture').src='/users/'+userCtx.name+'/picture.png'
+     ETag=this.getResponseHeader('ETag')
+     console.log("Etag=",ETag)
+     if(ETag)return 0
+     var x=new xhr()
+     x.open('put','/users/'+userCtx.name,true)
+     x.setRequestHeader('Content-Type','application/json')
+     x.addEventListener('load',function(){
+      ETag=this.getResponseHeader('ETag')
+      console.log("New=",ETag)
+     },false)
+     x.send('{"city":"","country":"","phone":"","email":""}')
+    },false)
+    x.send()
+   },false)
+   x.send()
+  </script>
+
+  <form name="user" action="javascript:put()">
+   <label>city:</label>    <input name="city"   /><br/>
+   <label>country:</label> <input name="country"/><br/>
+   <label>phone:</label>   <input name="phone"  /><br/>
+   <label>email:</label>   <input name="email"  /><br/>
+   <input type="submit" value="update"/>
+   <script>
+    put=function(){
+     if(!userCtx.name)return 0
+     if(!ETag)return 0
+     var x=new xhr()
+     x.open('put','/users/_design/users/_update/form/'+userCtx.name,true);
+     x.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+     x.setRequestHeader('If-Match',ETag);
+     x.addEventListener('load',function(){
+      ETag=this.getResponseHeader('X-Couch-Update-NewRev')
+      console.log("Etag=",ETag)
+     },false)
+     x.send(formURI(document.user))
+    }
+   </script>
+  </form>
+
+  <form name="dropBox" action="javascript:return null">
+   <img id="picture" alt="picture" src="/www/png/users.png"/>
+   <script>
+    dropBox(document.getElementById('picture'))
+   </script>
+  </form>
+
+  <form name="login" action="javascript:login()">
+   <label>name:</label>     <input name="name"/><br/>
+   <label>password:</label> <input name="password"/><br/>
+   <input type="submit" value="login"/><br/>
+   <script>
+    login=function(){
+     var x=new xhr()
+     x.open('post','/_session',true)
+     x.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     x.addEventListener('load',function(){
+      //create user
+     },false)
+     x.send(formURI(document.login))
+    }
+   </script>
+  </form>
+
+  <form name="logout" action="javascript:logout()">
+   <input type="submit" value="logout"/><br/>
+   <script>
+    logout=function(){
+     var x=new xhr()
+     x.open('delete','/_session',true)
+     x.send()
+    }
+   </script>
+  </form>
+<!--
+  <form name="facebook" action="javascript:window.location='https://www.facebook.com/dialog/oauth?client_id=249348058430770&scope=user_about_me&redirect_uri=http:%2F%2Fcouchdb.no-ip.org:5984%2F_fb'">
+   <input type="submit" value="facebook"/><br/>
+  </form>
+
+  <script src="https://browserid.org/include.js"></script>
+  <form name="browserid" action="javascript:navigator.id.getVerifiedEmail(browserid)">
+   <input type="submit" value="browserid"/><br/>
+   <script>
+    browserid=function(assertion){
+     if(assertion){
+      var x=new xhr()
+      x.open('post','/_browserid',true)
+      x.setRequestHeader('Content-Type','application/json')
+      x.send('{"assertion":"'+assertion+'","audience":"couchdb.no-ip.org:5984"}')
+     }else{alert('doh!')}
+    }
+   </script>
+  </form>
+-->
+ </body>
+</html>
