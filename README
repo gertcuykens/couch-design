@@ -2,8 +2,10 @@
 # Copyright(c) gert.cuykens@gmail.com
 ./put users
 ./put users/_security
-./put users/_design/user.db
-./put users/_design/user/user.htm
-./put users/_design/user/user.css
-./put users/_design/user/user.png
-./put users/_design/user/http.js
+./put users/_design/users
+./put www/_security
+./put www/_design/www
+./put www/htm/users.htm
+./put www/css/users.css
+./put www/png/users.png
+./put www/js/http.js

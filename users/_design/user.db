@@ -1,5 +1,0 @@
-{
- "validate_doc_update":"function(n,o,u){if(!n['_id'])throw({forbidden:'no _id'})}",
- "updates":{"form":"function(doc,req){for(i in req.form)doc[i]=req.form[i];return [doc,{headers:{'Content-Type':'application/json','ETag':doc._rev},body:'{\"ok\":201}'}]}"},
- "filters":{"design":"function(doc,req){return '_design/'===doc._id.substr(0,8)}"},
-}
