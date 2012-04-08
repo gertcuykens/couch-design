@@ -1,5 +1,5 @@
 {
- "validate_doc_update":"function(newDoc, oldDoc, userCtx, secObj){if(!userCtx.name){throw({forbidden:'update forbidden'})}}",
+ "validate_doc_update":"function(newDoc, oldDoc, userCtx, secObj){if(!userCtx.name)throw({forbidden:'update forbidden'})}",
  "filters":{"_design":"function(doc,req){return '_design/'===doc._id.substr(0,8)}"},
  "updates":{"form":"function(doc,req){for(i in req.form)doc[i]=req.form[i];return [doc,{json:{'ok':true}}]}"}
 }

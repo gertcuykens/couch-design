@@ -16,12 +16,19 @@
     userCtx=v["userCtx"]
     console.log("userCtx=",userCtx)
     if(!userCtx.name)return 0
+    document.getElementById('picture').put='/users/'+userCtx.name+'/picture.png'
     var x=new xhr()
     x.open('get','/users/'+userCtx.name,true)
     x.addEventListener('load',function(){
      var i,v=JSON.parse(this.response)
      for(i in v){if(document.user[i])document.user[i].value=v[i]}
-     document.getElementById('picture').src='/users/'+userCtx.name+'/picture.png'
+     var x=new XMLHttpRequest()
+     x.open('get','/users/'+userCtx.name+'/picture.png',true)
+     x.addEventListener('load',function(e){
+      try {var v=JSON.parse(this.response)} //if(!v['error'])
+      catch(e){document.getElementById('picture').src='/users/'+userCtx.name+'/picture.png'}
+     },false)
+     x.send()
      ETag=this.getResponseHeader('ETag')
      console.log("Etag=",ETag)
      if(ETag)return 0
@@ -55,7 +62,7 @@
      x.setRequestHeader('If-Match',ETag);
      x.addEventListener('load',function(){
       ETag=this.getResponseHeader('X-Couch-Update-NewRev')
-      console.log("Etag=",ETag)
+      console.log("ETag=",ETag)
      },false)
      x.send(formURI(document.user))
     }

@@ -38,7 +38,7 @@ dropBox=function(d){
   for (var i=0;i<f.length;i++){
    preview(f[i],d)
    x=new xhr()
-   x.open('put',d.src,true)
+   x.open('put',d.put,true)
    x.setRequestHeader('Content-Type','image/png')
    if(ETag)x.setRequestHeader('If-Match',ETag)
    x.send(f[i])
@@ -55,3 +55,4 @@ formURI=function(v){
  for(i in t)if(t[i].type=='text')s+=encodeURIComponent(t[i].name)+'='+encodeURIComponent(t[i].value)+'&'
  return s.slice(0,-1)
 }
+
