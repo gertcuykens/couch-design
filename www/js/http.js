@@ -1,20 +1,26 @@
 // Copyright(c) gert.cuykens@gmail.com
+ETag=null
 xhr=function(){
- var x=new XMLHttpRequest()
  var statBox=document.createElement('progress')
  statBox.value=0
  statBox.max=100
  statBox.style.display='none'
- statBox.addEventListener('click',function(e){x.abort()},false)
+ statBox.addEventListener('click',function(e){this.abort()},false)
  document.body.appendChild(statBox)
- x.addEventListener('loadstart',function(e){statBox.style.display='inline-block'},false)
- x.addEventListener('loadstart',function(e){statBox.style.backgroundColor='green'},false)
- x.addEventListener('loadstart',function(e){statBox.value=0},false)
+ var x=new XMLHttpRequest()
+ x.addEventListener('loadstart',function(e){
+  statBox.style.display='inline-block'
+  statBox.style.backgroundColor='green'
+  statBox.value=0
+ },false)
  x.addEventListener('abort',function(e){statBox.style.display='none'},false)
  x.addEventListener('progress',function(e){if(e.lengthComputable)statBox.value=Math.round((e.loaded*100)/e.total)},false)
  x.addEventListener('error',function(e){statBox.style.backgroundColor='red'},false)
- x.addEventListener('load',function(e){ETag=x.getResponseHeader('ETag')},false)
- x.addEventListener('load',function(e){statBox.style.display='none'},false)
+ x.addEventListener('load',function(e){
+  statBox.style.display='none'
+  if(this.getResponseHeader('ETag')){ETag=this.getResponseHeader('ETag');return 0}
+  if(this.getResponseHeader('X-Couch-Update-NewRev')){ETag=this.getResponseHeader('X-Couch-Update-NewRev');return 0}
+ },false)
  return x
 }
 

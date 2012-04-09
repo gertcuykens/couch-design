@@ -13,8 +13,7 @@
    x.open('get','/_session',true)
    x.addEventListener('load',function(){
     var v=JSON.parse(this.response)
-    userCtx=v["userCtx"]
-    console.log("userCtx=",userCtx)
+    userCtx=v['userCtx']
     if(!userCtx.name)return 0
     document.getElementById('picture').put='/users/'+userCtx.name+'/picture.png'
     var x=new xhr()
@@ -29,16 +28,10 @@
       catch(e){document.getElementById('picture').src='/users/'+userCtx.name+'/picture.png'}
      },false)
      x.send()
-     ETag=this.getResponseHeader('ETag')
-     console.log("Etag=",ETag)
      if(ETag)return 0
      var x=new xhr()
      x.open('put','/users/'+userCtx.name,true)
      x.setRequestHeader('Content-Type','application/json')
-     x.addEventListener('load',function(){
-      ETag=this.getResponseHeader('ETag')
-      console.log("New=",ETag)
-     },false)
      x.send('{"city":"","country":"","phone":"","email":""}')
     },false)
     x.send()
@@ -57,13 +50,9 @@
      if(!userCtx.name)return 0
      if(!ETag)return 0
      var x=new xhr()
-     x.open('put','/users/_design/users/_update/form/'+userCtx.name,true);
-     x.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-     x.setRequestHeader('If-Match',ETag);
-     x.addEventListener('load',function(){
-      ETag=this.getResponseHeader('X-Couch-Update-NewRev')
-      console.log("ETag=",ETag)
-     },false)
+     x.open('put','/users/_design/users/_update/form/'+userCtx.name,true)
+     x.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+     x.setRequestHeader('If-Match',ETag)
      x.send(formURI(document.user))
     }
    </script>
@@ -71,9 +60,7 @@
 
   <form name="dropBox" action="javascript:return null">
    <img id="picture" alt="picture" src="/www/png/users.png"/>
-   <script>
-    dropBox(document.getElementById('picture'))
-   </script>
+   <script>dropBox(document.getElementById('picture'))</script>
   </form>
 
   <form name="login" action="javascript:login()">
@@ -103,6 +90,7 @@
     }
    </script>
   </form>
+
 <!--
   <form name="facebook" action="javascript:window.location='https://www.facebook.com/dialog/oauth?client_id=249348058430770&scope=user_about_me&redirect_uri=http:%2F%2Fcouchdb.no-ip.org:5984%2F_fb'">
    <input type="submit" value="facebook"/><br/>
@@ -123,5 +111,6 @@
    </script>
   </form>
 -->
+
  </body>
 </html>
