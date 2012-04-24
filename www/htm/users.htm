@@ -63,26 +63,30 @@
    <script>dropBox(document.getElementById('picture'))</script>
   </form>
 
-  <form name="login" action="javascript:login()">
+  <form name="session" action="javascript:return null">
    <label>name:</label>     <input name="name"/><br/>
    <label>password:</label> <input name="password"/><br/>
-   <input type="submit" value="login"/><br/>
+   <input type="button" value="signup" onclick="signup()"/><br/>
+   <input type="button" value="login"  onclick="login()"/><br/>
+   <input type="button" value="logout" onclick="logout()"/><br/>
    <script>
     login=function(){
      var x=new xhr()
      x.open('post','/_session',true)
      x.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-     x.addEventListener('load',function(){
-      //create user
-     },false)
-     x.send(formURI(document.login))
+     x.send(formURI(document.session))
     }
-   </script>
-  </form>
-
-  <form name="logout" action="javascript:logout()">
-   <input type="submit" value="logout"/><br/>
-   <script>
+    signup=function(){
+     var u=new Object
+     u.name=document.session['name'].value
+     u.password=document.session['password'].value
+     u.roles=[]
+     u.type='user'
+     var x=new xhr()
+     x.open('put','/_users/org.couchdb.user%3A'+u.name,true)
+     x.setRequestHeader('Content-Type','application/json')
+     x.send(JSON.stringify(u))
+    }
     logout=function(){
      var x=new xhr()
      x.open('delete','/_session',true)
